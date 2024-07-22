@@ -92,12 +92,6 @@ int main(int argc, char *argv[])
 
         Info << "Time = " << runTime.timeName() << endl;
 
-        // Volumetric interpolation used, see references at top of RKSymFoam.C
-        // Turbulence model is required, to run DNS, set:
-        // 1. <transportModel Newtonian;> in constant/transportProperties, and
-        // 2. <simulationType laminar;> in constant/turbulenceProperties
-        nuf =  reverseLinear<scalar>(mesh).interpolate(turbulence->nuEff());
-
         pn = p.oldTime();
 
         // Loop over stages of Butcher Tableau
@@ -119,6 +113,12 @@ int main(int argc, char *argv[])
                 // Similar to PISO outer iteration loop
                 while (scheme.outerLoop())
                 {
+                    // Volumetric interpolation used, see references at top of RKSymFoam.C
+                    // Turbulence model is required, to run DNS, set:
+                    // 1. <transportModel Newtonian;> in constant/transportProperties, and
+                    // 2. <simulationType laminar;> in constant/turbulenceProperties
+                    nuf =  reverseLinear<scalar>(mesh).interpolate(turbulence->nuEff());
+
                     #include "UEqn.H"
 
                     // Similar to PISO inner iteration loop
